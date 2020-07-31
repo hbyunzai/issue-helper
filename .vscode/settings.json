@@ -1,0 +1,21 @@
+{
+  "editor.codeActionsOnSave": {
+    // For ESLint
+    "source.fixAll.eslint": true,
+    // For Stylelint
+    "source.fixAll.stylelint": true
+  },
+  "editor.formatOnSave": true,
+  "[json]": {
+    "editor.formatOnSave": false
+  },
+  "[jsonc]": {
+    "editor.formatOnSave": false
+  },
+  "files.associations": {
+    "*.json": "jsonc",
+    ".prettierrc": "json",
+    ".stylelintrc": "json"
+  },
+  "git.ignoreLimitWarning": true
+}

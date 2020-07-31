@@ -1,0 +1,145 @@
+<form nz-form nzLayout="vertical" [formGroup]="issueForm">
+  <div nz-row [nzGutter]="16">
+    <div nz-col nzSpan="11">
+      <nz-form-item>
+        <nz-form-label nzFor="repository">{{ l['issue.repo'] }}</nz-form-label>
+        <nz-form-control [nzExtra]="l['issue.repo.help']">
+          <nz-select id="repository" formControlName="repository">
+            <nz-option *ngFor="let r of repositories" [nzValue]="r" [nzLabel]="r"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="12" nzOffset="1">
+      <nz-form-item>
+        <nz-form-label nzFor="type">{{ l['issue.type'] }}</nz-form-label>
+        <nz-form-control>
+          <nz-radio-group
+            [(ngModel)]="issueType"
+            (ngModelChange)="changeType()"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <label nz-radio-button nzValue="bug">{{ l['issue.type.bug'] }}</label>
+            <label nz-radio-button nzValue="feature">{{ l['issue.type.feature'] }}</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzFor="issue_title" nzRequired>{{ l['issue.title'] }}</nz-form-label>
+        <nz-form-control [nzErrorTip]="l['issue.title.required']">
+          <input nz-input formControlName="issue_title" id="issue_title" (ngModelChange)="searchOnChange($event)" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col [nzSpan]="24" *ngIf="searchIssues.length > 0">
+      <nz-form-item>
+        <nz-form-control>
+          <h3>{{ l['issue.title.similar'] }}</h3>
+          <ul>
+            <li *ngFor="let issue of searchIssues">
+              <a target="_blank" href="{{ issue.html_url }}">{{ issue.title }}</a>
+            </li>
+          </ul>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <ng-container *ngIf="issueType === 'bug'">
+      <div nz-col nzSpan="11">
+        <nz-form-item>
+          <nz-form-label nzFor="version" nzRequired>{{ l['issue.version'] }}</nz-form-label>
+          <nz-form-control [nzExtra]="l['issue.version.help']">
+            <nz-select formControlName="version" id="version">
+              <nz-option *ngFor="let version of versions" [nzLabel]="version" [nzValue]="version"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12" nzOffset="1">
+        <nz-form-item>
+          <nz-form-label nzFor="browser" nzRequired>{{ l['issue.browser'] }}</nz-form-label>
+          <nz-form-control [nzExtra]="l['issue.browser.help']" [nzErrorTip]="l['issue.browser.required']">
+            <input nz-input formControlName="browser" id="browser" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzFor="reproduction" nzRequired>{{ l['issue.reproduction'] }}</nz-form-label>
+          <nz-form-control [nzExtra]="reproductionExtra" [nzErrorTip]="l['issue.reproduction.required']">
+            <input nz-input formControlName="reproduction" id="reproduction" />
+          </nz-form-control>
+          <ng-template #reproductionExtra>
+            <div [innerHTML]="l['md-repro-help']"></div>
+          </ng-template>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzFor="steps" nzRequired>{{ l['issue.steps'] }}</nz-form-label>
+          <nz-form-control [nzExtra]="stepsExtra" [nzErrorTip]="l['issue.steps.required']">
+            <textarea nz-input formControlName="steps" id="steps" [nzAutosize]="{ minRows: 2 }"></textarea>
+          </nz-form-control>
+          <ng-template #stepsExtra>
+            <div [innerHTML]="l['md-steps-help']"></div>
+          </ng-template>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzFor="expected" nzRequired>{{ l['issue.expected'] }}</nz-form-label>
+          <nz-form-control [nzErrorTip]="l['issue.expected.required']">
+            <textarea nz-input formControlName="expected" id="expected" [nzAutosize]="{ minRows: 2 }"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzFor="actually" nzRequired>{{ l['issue.actually'] }}</nz-form-label>
+          <nz-form-control [nzErrorTip]="l['issue.actually.required']">
+            <textarea nz-input formControlName="actually" id="actually" [nzAutosize]="{ minRows: 2 }"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzFor="extra">{{ l['issue.extra'] }}</nz-form-label>
+          <nz-form-control [nzExtra]="l['issue.extra.help']">
+            <textarea nz-input formControlName="extra" id="extra" [nzAutosize]="{ minRows: 2 }"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="issueType === 'feature'">
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzFor="motivation" nzRequired>{{ l['issue.motivation'] }}</nz-form-label>
+          <nz-form-control [nzExtra]="motivationExtra" [nzErrorTip]="l['issue.motivation.required']">
+            <textarea nz-input formControlName="motivation" id="motivation" [nzAutosize]="{ minRows: 2 }"></textarea>
+          </nz-form-control>
+          <ng-template #motivationExtra>
+            <div [innerHTML]="l['md-motivation-help']"></div>
+          </ng-template>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label nzFor="proposal" nzRequired>{{ l['issue.proposal'] }}</nz-form-label>
+          <nz-form-control [nzExtra]="proposalExtra" [nzErrorTip]="l['issue.proposal.required']">
+            <textarea nz-input formControlName="proposal" id="proposal" [nzAutosize]="{ minRows: 2 }"></textarea>
+          </nz-form-control>
+          <ng-template #proposalExtra>
+            <div [innerHTML]="l['md-proposal-help']"></div>
+          </ng-template>
+        </nz-form-item>
+      </div>
+    </ng-container>
+    <div nz-col [nzSpan]="24" style="text-align: center">
+      <button nz-button [nzSize]="'large'" nzType="primary" (click)="submitFormPreview()">
+        <i nz-icon nzType="bug"></i>
+        {{ l['issue.preview'] }}
+      </button>
+    </div>
+  </div>
+</form>

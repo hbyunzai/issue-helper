@@ -1,0 +1,13 @@
+**/*.md
+**/*.svg
+# **/*.html
+**/test.ts
+src/index.html
+
+.stylelintrc
+.prettierrc
+
+node_modules/
+coverage/
+dist/
+package.json
