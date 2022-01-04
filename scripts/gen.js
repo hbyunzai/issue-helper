@@ -12,7 +12,7 @@ function genMarkdown(dir) {
     .filter(v => v.endsWith('.md'))
     .forEach(mdPath => {
       const content = fs.readFileSync(path.join(dir, mdPath)).toString('utf8');
-      const html = marked(content);
+      const html = marked.parse(content);
       res[`md-${mdPath.replace('.md', '')}`] = html;
     });
   return res;
